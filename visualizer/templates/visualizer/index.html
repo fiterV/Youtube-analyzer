@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Piece of cake</title>
+    {% load staticfiles %}
+    <script src="{% static "visualizer/jquery.min.js" %}"></script>
+    <link rel="stylesheet" type="text/css" href="{% static "visualizer/css/bootstrap.min.css" %}">
+</head>
+<body>
+
+<div class="container">
+
+    <h3>{{ owner }}'s statistics</h3>
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Title</th>
+                <th>Channel</th>
+                <th>Date</th>
+                <th>Video</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for video in videos %}
+                <tr>
+                    <th>{{ forloop.counter }}</th>
+                    <th>{{ video.title }}</th>
+                    <th>{{ video.channel }}</th>
+                    <th>{{ video.date }}</th>
+                    <th><a href="{{ video.url }}">{{ video.url }}</a></th>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+
+
+</div>
+
+
+</body>
+</html>
