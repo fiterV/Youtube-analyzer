@@ -10,14 +10,16 @@
 // ==/UserScript==
 
 x = [];
+//here you put your access token, that you got
 token = '9GwZ8u4jctPdlOfjnqmsk8KlC25Vrh';
-
+//web-address of analyzer
+serverAddress='https://tranquil-tundra-67102.herokuapp.com/api/';
 
 function sendSomeUrl(){
     console.log('Trying to send something');
  window.jQuery.ajax({
             type:'POST',
-            url:'https://tranquil-tundra-67102.herokuapp.com/api/',
+            url:serverAddress,
             data: {
                 title: title,
                 url: url,
@@ -25,18 +27,16 @@ function sendSomeUrl(){
                 api_key: token,
             },
              success:function (e) {
-                //alert(e);
 
              }
          });    
 }
-
+//check for new updates every second
 window.setInterval(function(){
-  /// call your function here
     url = window.location.href;
     title = window.jQuery("#eow-title").text().trim();
     channel = document.evaluate("//div[@class='yt-user-info']/a", document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.innerHTML;
-   // alert(url);
+
     var last = x[x.length-1];
     if (url!=last && url.search('watch')>0){
        x.push(url);
