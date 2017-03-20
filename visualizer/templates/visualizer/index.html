@@ -8,17 +8,9 @@
     <link rel="stylesheet" type="text/css" href="{% static "visualizer/css/bootstrap.min.css" %}">
     <script src="{% static "visualizer/js/bootstrap.js" %}"></script>
     <script type="text/javascript" src="{% static "visualizer/globalize.min.js" %}"></script>
-    <script type="text/javascript" src="{% static "visualizer/dx.all.js" %}"></script>
+    <script type="text/javascript" src="https://cdn3.devexpress.com/jslib/16.2.5/js/dx.all.js"></script>
 
 </head>
-
-<script>
-    $(document).ready(function(){
-
-
-    })
-</script>
-
 <body>
 
 <ul class="nav nav-tabs">
@@ -111,6 +103,11 @@
                     }
                 }
             },
+            export: {
+                enabled: true,
+                fileName:"youtubeStatistics",
+                formats:["PDF", "PNG", "JPEG"]
+            },
         });
 
         $("#chart2").dxChart({
@@ -142,6 +139,8 @@
             },
             export: {
                 enabled: true,
+                fileName:"youtubeStatistics",
+                formats:["PDF", "PNG", "JPEG"]
             },
             legend: {
                 visible: false
