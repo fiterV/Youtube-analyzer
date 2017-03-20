@@ -6,39 +6,148 @@
     {% load staticfiles %}
     <script src="{% static "visualizer/jquery.min.js" %}"></script>
     <link rel="stylesheet" type="text/css" href="{% static "visualizer/css/bootstrap.min.css" %}">
+    <script src="{% static "visualizer/js/bootstrap.js" %}"></script>
+    <script type="text/javascript" src="{% static "visualizer/globalize.min.js" %}"></script>
+    <script type="text/javascript" src="{% static "visualizer/dx.all.js" %}"></script>
+
 </head>
+
+<script>
+    $(document).ready(function(){
+
+
+    })
+</script>
+
 <body>
 
-<div class="container">
+<ul class="nav nav-tabs">
+  <li role="presentation" class="">
+      <a href="#history" id="history-tab" role="tab" data-toggle="tab" aria-controls="history" aria-expanded="true">History</a>
+  </li>
+  <li role="presentation" class="active">
+      <a href="#statistics" role="tab" id="statistics-tab" data-toggle="tab" aria-controls="statistics" aria-expanded="false">Statistics per channel</a>
+  </li>
+</ul>
 
-    <h3>{{ owner }}'s statistics</h3>
+<div class="tab-content">
+    <div class="tab-pane fade" role="tabpanel" id="history" aria-labelledby="history-tab">
+        <div class="container">
+            <h3>{{ owner }}'s statistics</h3>
 
-    <table class="table table-striped">
-        <thead>
-            <tr>
-                <th>#</th>
-                <th>Title</th>
-                <th>Channel</th>
-                <th>Date</th>
-                <th>Video</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for video in videos %}
-                <tr>
-                    <th>{{ forloop.counter }}</th>
-                    <th>{{ video.title }}</th>
-                    <th>{{ video.channel }}</th>
-                    <th>{{ video.date }}</th>
-                    <th><a href="{{ video.url }}">{{ video.url }}</a></th>
-                </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-
-
-
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Title</th>
+                        <th>Channel</th>
+                        <th>Date</th>
+                        <th>Video</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for video in videos %}
+                        <tr>
+                            <th>{{ forloop.counter }}</th>
+                            <th>{{ video.title }}</th>
+                            <th>{{ video.channel }}</th>
+                            <th>{{ video.date }}</th>
+                            <th><a href="{{ video.url }}">{{ video.url }}</a></th>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="tab-pane fade active in" role="tabpanel" id="statistics" aria-labelledby="statistics-tab">
+        <div class="row">
+            <div class="col-lg-6">
+                <div id="chart"></div>
+            </div>
+            <div class="col-lg-6">
+                <div class="demo-container">
+                <div id="chart2" class="dx-visibility-change-handler"></div>
+                    </div>
+            </div>
+        </div>
+    </div>
 </div>
+
+
+<script>
+
+        var dataSource = [];
+        {% for video in videos %}
+                dataSource.push({
+                    "channel":'{{ video.channel }}',
+                    "counter":1,
+                });
+        {% endfor %}
+        var res = {}
+        for (var i=0, key, value; i<dataSource.length; i++){
+            key = dataSource[i]["channel"];
+            value = dataSource[i]["channel"];
+            res[value] = (res[value] || 0)+1;
+        }
+        dataSource = []
+        for (var key in res){
+            dataSource .push( {
+                "channel":key,
+                "counter":res[key],
+            });
+        }
+        console.log(dataSource);
+
+        $('#chart').dxPieChart({
+            palette: "bright",
+            dataSource:dataSource,
+            series:{
+                argumentField:"channel",
+                valueField:"counter",
+                label: {
+                    visible: true,
+                    customizeText: function(arg) {
+                        return " " + arg.percentText + " ";
+                    }
+                }
+            },
+        });
+
+        $("#chart2").dxChart({
+            rotated: true,
+            dataSource: dataSource,
+            series: {
+                label: {
+                    visible: true,
+                    backgroundColor: "#c18e92"
+                },
+                color: "#79cac4",
+                type: "bar",
+               argumentField:"channel",
+                    valueField:"counter"
+            },
+            title: "Opened Videos",
+            argumentAxis: {
+                label: {
+                    customizeText: function() {
+                        console.log(this);
+                        return this.valueText;
+                    }
+                }
+            },
+            valueAxis: {
+                label: {
+                    visible: false
+                }
+            },
+            export: {
+                enabled: true,
+            },
+            legend: {
+                visible: false
+            },
+         });
+</script>
 
 
 </body>
