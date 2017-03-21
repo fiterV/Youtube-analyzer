@@ -9,7 +9,15 @@
     <script src="{% static "visualizer/js/bootstrap.js" %}"></script>
     <script type="text/javascript" src="{% static "visualizer/globalize.min.js" %}"></script>
     <script type="text/javascript" src="https://cdn3.devexpress.com/jslib/16.2.5/js/dx.all.js"></script>
+<style>
+    .tab-content > .tab-pane:not(.active),
+.pill-content > .pill-pane:not(.active) {
+    display: block;
+    height: 0;
+    overflow-y: hidden;
+}
 
+</style>
 </head>
 <body>
 
@@ -68,9 +76,9 @@
         </div>
     </div>
 
-    <div class="tab-pane fade active in" role="tabpanel" id="statisticsDay" aria-labelledby="statisticsDay-tab">
+    <div class="tab-pane fade" role="tabpanel" id="statisticsDay" aria-labelledby="statisticsDay-tab">
         <div class="container" id="day-charts">
-            fewafjawonfjwifjiqwoe
+
         </div>
     </div>
 </div>
@@ -179,13 +187,13 @@
           $('#day-charts').append('<h3>'+key+'</h3>');
            $('#day-charts').append(`<div class="row">
                                     <div class="col-lg-6">
-                                        <div id="chart-{numb}"></div>
+                                        <div id="chart-${number}"></div>
                                     </div>
                                     <div class="col-lg-6">
-                                        <div id="chart-{numb2}"></div>
+                                        <div id="chart-${number+1}"></div>
 
-                                    </div></div>`.replace("{numb}", number).replace("{numb2}", number+1));
-           $('#chart-{numb}'.replace("{numb}", number)).dxPieChart({
+                                    </div></div>`);
+           $(`#chart-${number}`).dxPieChart({
                 palette: "bright",
                 dataSource:getStatisticsPerChannel(res2[key]),
                 series:{
@@ -200,13 +208,13 @@
                 },
                 export: {
                     enabled: true,
-                    fileName:"youtubeStatistics-{date}".replace("{date}", key),
+                    fileName:`youtubeStatistics-${key}`,
                     formats:["PDF", "PNG", "JPEG"]
                 },
             });
 
 
-           $('#chart-{numb}'.replace("{numb}", number+1)).dxChart({
+           $(`#chart-${number+1}`).dxChart({
             rotated: true,
             dataSource: getStatisticsPerChannel(res2[key]),
             series: {
@@ -219,7 +227,7 @@
                argumentField:"channel",
                     valueField:"counter"
             },
-            title: key,
+            title: "    ",
             argumentAxis: {
                 label: {
                     customizeText: function() {
@@ -235,7 +243,7 @@
             },
             export: {
                 enabled: true,
-                fileName:"youtubeStatistics-{date}".replace("{date}", key),
+                fileName:`youtubeStatistics-${key}`,
                 formats:["PDF", "PNG", "JPEG"]
             },
             legend: {
