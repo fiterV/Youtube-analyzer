@@ -14,16 +14,21 @@
 <body>
 
 <ul class="nav nav-tabs">
-  <li role="presentation" class="">
-      <a href="#history" id="history-tab" role="tab" data-toggle="tab" aria-controls="history" aria-expanded="true">History</a>
+  <li role="presentation">
+
+      <a href="#history" aria-controls="history" role="tab" data-toggle="tab">History</a>
   </li>
   <li role="presentation" class="active">
-      <a href="#statistics" role="tab" id="statistics-tab" data-toggle="tab" aria-controls="statistics" aria-expanded="false">Statistics per channel</a>
+      <a href="#statistics" aria-controls="statistics" role="tab" data-toggle="tab">Statistics per channel</a>
+ </li>
+
+  <li role="presentation" class="">
+      <a href="#statisticsDay" aria-controls="statisticsDay" role="tab" data-toggle="tab">Statistics per day</a>
   </li>
 </ul>
 
 <div class="tab-content">
-    <div class="tab-pane fade" role="tabpanel" id="history" aria-labelledby="history-tab">
+    <div class="tab-pane fade" id="history" role="tabpanel" aria-labelledby="history-tab">
         <div class="container">
             <h3>{{ owner }}'s statistics</h3>
 
@@ -57,10 +62,15 @@
                 <div id="chart"></div>
             </div>
             <div class="col-lg-6">
-                <div class="demo-container">
-                <div id="chart2" class="dx-visibility-change-handler"></div>
-                    </div>
+                <div id="chart2"></div>
+
             </div>
+        </div>
+    </div>
+
+    <div class="tab-pane fade active in" role="tabpanel" id="statisticsDay" aria-labelledby="statisticsDay-tab">
+        <div class="container" id="day-charts">
+            fewafjawonfjwifjiqwoe
         </div>
     </div>
 </div>
@@ -72,27 +82,34 @@
         {% for video in videos %}
                 dataSource.push({
                     "channel":'{{ video.channel }}',
+                    "date":'{{ video.date|date:'d-m-Y' }}',
                     "counter":1,
                 });
         {% endfor %}
-        var res = {}
-        for (var i=0, key, value; i<dataSource.length; i++){
-            key = dataSource[i]["channel"];
-            value = dataSource[i]["channel"];
-            res[value] = (res[value] || 0)+1;
+        function getStatisticsPerChannel(dataSource){
+            var res = {};
+        //for each channel we're gonna calculate how many times it occurs in the videos
+            for (var i=0, key, value; i<dataSource.length; i++){
+                key = dataSource[i]["channel"];
+                value = dataSource[i]["channel"];
+                res[value] = (res[value] || 0)+1;
+                }
+            res1 = [];
+            for (var key in res){
+                res1 .push( {
+                    "channel":key,
+                    "counter":res[key],
+                });
+            }
+            return res1;
         }
-        dataSource = []
-        for (var key in res){
-            dataSource .push( {
-                "channel":key,
-                "counter":res[key],
-            });
-        }
-        console.log(dataSource);
+        res1 = getStatisticsPerChannel(dataSource);
+
+
 
         $('#chart').dxPieChart({
             palette: "bright",
-            dataSource:dataSource,
+            dataSource:res1,
             series:{
                 argumentField:"channel",
                 valueField:"counter",
@@ -112,7 +129,7 @@
 
         $("#chart2").dxChart({
             rotated: true,
-            dataSource: dataSource,
+            dataSource: res1,
             series: {
                 label: {
                     visible: true,
@@ -146,6 +163,89 @@
                 visible: false
             },
          });
+
+        res2 = []
+        //$('#day-charts').append('<h3>Added</h3>');
+        for (key in dataSource){
+            res2[dataSource[key]["date"]]=[]
+        }
+        for (key in dataSource){
+            res2[dataSource[key]["date"]].push(dataSource[key]);
+        }
+        var number=0;
+
+        for (key in res2){
+            number+=2;
+          $('#day-charts').append('<h3>'+key+'</h3>');
+           $('#day-charts').append(`<div class="row">
+                                    <div class="col-lg-6">
+                                        <div id="chart-{numb}"></div>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <div id="chart-{numb2}"></div>
+
+                                    </div></div>`.replace("{numb}", number).replace("{numb2}", number+1));
+           $('#chart-{numb}'.replace("{numb}", number)).dxPieChart({
+                palette: "bright",
+                dataSource:getStatisticsPerChannel(res2[key]),
+                series:{
+                    argumentField:"channel",
+                    valueField:"counter",
+                    label: {
+                        visible: true,
+                        customizeText: function(arg) {
+                            return " " + arg.percentText + " ";
+                        }
+                    }
+                },
+                export: {
+                    enabled: true,
+                    fileName:"youtubeStatistics-{date}".replace("{date}", key),
+                    formats:["PDF", "PNG", "JPEG"]
+                },
+            });
+
+
+           $('#chart-{numb}'.replace("{numb}", number+1)).dxChart({
+            rotated: true,
+            dataSource: getStatisticsPerChannel(res2[key]),
+            series: {
+                label: {
+                    visible: true,
+                    backgroundColor: "#c18e92"
+                },
+                color: "#79cac4",
+                type: "bar",
+               argumentField:"channel",
+                    valueField:"counter"
+            },
+            title: key,
+            argumentAxis: {
+                label: {
+                    customizeText: function() {
+                        console.log(this);
+                        return this.valueText;
+                    }
+                }
+            },
+            valueAxis: {
+                label: {
+                    visible: false
+                }
+            },
+            export: {
+                enabled: true,
+                fileName:"youtubeStatistics-{date}".replace("{date}", key),
+                formats:["PDF", "PNG", "JPEG"]
+            },
+            legend: {
+                visible: false
+            },
+         });
+
+
+        }
+
 </script>
 
 
