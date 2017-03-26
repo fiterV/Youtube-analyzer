@@ -2,20 +2,26 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Piece of cake</title>
+    <title>Youtube statistics</title>
     {% load staticfiles %}
     <script src="{% static "visualizer/jquery.min.js" %}"></script>
     <link rel="stylesheet" type="text/css" href="{% static "visualizer/css/bootstrap.min.css" %}">
     <script src="{% static "visualizer/js/bootstrap.js" %}"></script>
-    <script type="text/javascript" src="{% static "visualizer/globalize.min.js" %}"></script>
-    <script type="text/javascript" src="https://cdn3.devexpress.com/jslib/16.2.5/js/dx.all.js"></script>
+    <script src="{% static "visualizer/globalize.min.js" %}"></script>
+    <script src="https://cdn3.devexpress.com/jslib/16.2.5/js/dx.all.js"></script>
+    <script src="{% static "visualizer/charts.js" %}"></script>
+    <link href="https://fonts.googleapis.com/css?family=Jim+Nightshade" rel="stylesheet">
 <style>
     .tab-content > .tab-pane:not(.active),
-.pill-content > .pill-pane:not(.active) {
-    display: block;
-    height: 0;
-    overflow-y: hidden;
-}
+    .pill-content > .pill-pane:not(.active) {
+        display: block;
+        height: 0;
+        overflow-y: hidden;
+    }
+    .date{
+        font-family: 'Jim Nightshade', cursive;
+        font-weight:bold;
+    }
 
 </style>
 </head>
@@ -83,10 +89,8 @@
     </div>
 </div>
 
-
 <script>
-
-        var dataSource = [];
+    var dataSource = [];
         {% for video in videos %}
                 dataSource.push({
                     "channel":'{{ video.channel }}',
@@ -94,166 +98,7 @@
                     "counter":1,
                 });
         {% endfor %}
-        function getStatisticsPerChannel(dataSource){
-            var res = {};
-        //for each channel we're gonna calculate how many times it occurs in the videos
-            for (var i=0, key, value; i<dataSource.length; i++){
-                key = dataSource[i]["channel"];
-                value = dataSource[i]["channel"];
-                res[value] = (res[value] || 0)+1;
-                }
-            res1 = [];
-            for (var key in res){
-                res1 .push( {
-                    "channel":key,
-                    "counter":res[key],
-                });
-            }
-            return res1;
-        }
-        res1 = getStatisticsPerChannel(dataSource);
-
-
-
-        $('#chart').dxPieChart({
-            palette: "bright",
-            dataSource:res1,
-            series:{
-                argumentField:"channel",
-                valueField:"counter",
-                label: {
-                    visible: true,
-                    customizeText: function(arg) {
-                        return " " + arg.percentText + " ";
-                    }
-                }
-            },
-            export: {
-                enabled: true,
-                fileName:"youtubeStatistics",
-                formats:["PDF", "PNG", "JPEG"]
-            },
-        });
-
-        $("#chart2").dxChart({
-            rotated: true,
-            dataSource: res1,
-            series: {
-                label: {
-                    visible: true,
-                    backgroundColor: "#c18e92"
-                },
-                color: "#79cac4",
-                type: "bar",
-               argumentField:"channel",
-                    valueField:"counter"
-            },
-            title: "Opened Videos",
-            argumentAxis: {
-                label: {
-                    customizeText: function() {
-                        console.log(this);
-                        return this.valueText;
-                    }
-                }
-            },
-            valueAxis: {
-                label: {
-                    visible: false
-                }
-            },
-            export: {
-                enabled: true,
-                fileName:"youtubeStatistics",
-                formats:["PDF", "PNG", "JPEG"]
-            },
-            legend: {
-                visible: false
-            },
-         });
-
-        res2 = []
-        //$('#day-charts').append('<h3>Added</h3>');
-        for (key in dataSource){
-            res2[dataSource[key]["date"]]=[]
-        }
-        for (key in dataSource){
-            res2[dataSource[key]["date"]].push(dataSource[key]);
-        }
-        var number=0;
-
-        for (key in res2){
-            number+=2;
-          $('#day-charts').append('<h3>'+key+'</h3>');
-           $('#day-charts').append(`<div class="row">
-                                    <div class="col-lg-6">
-                                        <div id="chart-${number}"></div>
-                                    </div>
-                                    <div class="col-lg-6">
-                                        <div id="chart-${number+1}"></div>
-
-                                    </div></div>`);
-           $(`#chart-${number}`).dxPieChart({
-                palette: "bright",
-                dataSource:getStatisticsPerChannel(res2[key]),
-                series:{
-                    argumentField:"channel",
-                    valueField:"counter",
-                    label: {
-                        visible: true,
-                        customizeText: function(arg) {
-                            return " " + arg.percentText + " ";
-                        }
-                    }
-                },
-                export: {
-                    enabled: true,
-                    fileName:`youtubeStatistics-${key}`,
-                    formats:["PDF", "PNG", "JPEG"]
-                },
-            });
-
-
-           $(`#chart-${number+1}`).dxChart({
-            rotated: true,
-            dataSource: getStatisticsPerChannel(res2[key]),
-            series: {
-                label: {
-                    visible: true,
-                    backgroundColor: "#c18e92"
-                },
-                color: "#79cac4",
-                type: "bar",
-               argumentField:"channel",
-                    valueField:"counter"
-            },
-            title: "    ",
-            argumentAxis: {
-                label: {
-                    customizeText: function() {
-                        console.log(this);
-                        return this.valueText;
-                    }
-                }
-            },
-            valueAxis: {
-                label: {
-                    visible: false
-                }
-            },
-            export: {
-                enabled: true,
-                fileName:`youtubeStatistics-${key}`,
-                formats:["PDF", "PNG", "JPEG"]
-            },
-            legend: {
-                visible: false
-            },
-         });
-
-
-        }
-
+    createCharts(dataSource);
 </script>
 
 
