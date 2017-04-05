@@ -21,3 +21,8 @@ class Video(models.Model):
     channel = models.CharField(max_length=200)
     date = models.DateTimeField(default=now)
     api_token = models.ForeignKey(Token)
+
+class EducationalChannel(models.Model):
+    url = models.URLField()
+    name = models.CharField(max_length=200)
+    fieldOfInterests = models.CharField(max_length=200)
