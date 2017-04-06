@@ -35,6 +35,10 @@
         height:50px;
 
     }
+    .datepicker:hover{
+        border-radius:10px;
+        box-shadow: 0 0 6px rgba(35, 173, 255, 1);
+    }
 
 </style>
 </head>
@@ -87,7 +91,6 @@
         <div class="row">
             <div class="col-lg-offset-11">
                 <!--<div class="btn btn-default datepicker">123</div>-->
-                <img src="{% static "visualizer/images/calendar-icon-32.png" %}" class="img img-responsive datepicker">
 
             </div>
         </div>
@@ -103,6 +106,9 @@
     </div>
 
     <div class="tab-pane fade" role="tabpanel" id="statisticsDay" aria-labelledby="statisticsDay-tab">
+        <div class="col-lg-offset-11">
+            <img src="{% static "visualizer/images/calendar-icon-32.png" %}" class="img img-responsive datepicker">
+        </div>
         <div class="container" id="day-charts">
 
         </div>
@@ -121,16 +127,41 @@
                 });
         {% endfor %}
     createCharts(dataSource);
-
+    console.log(dataSource);
     $('.datepicker').daterangepicker(
     {
         locale: {
           format: 'DD-MM-YYYY'
         },
+        ranges: {
+           'Today': [moment(), moment()],
+           'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+           'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+           'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+           'This Month': [moment().startOf('month'), moment().endOf('month')],
+           'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+        },
         opens:"left",
     },
     function(start, end, label) {
-        alert("A new date range was chosen: " + start.format('DD-MM-YYYY') + ' to ' + end.format('DD-MM-YYYY'));
+        var stDate = new Date(start);
+        var edDate = new Date(end);
+        newArr = [];
+        for (key in dataSource){
+            var dateString = dataSource[key]["date"];
+            var currDate = new Date(dateString.substring(6), parseInt(dateString.substring(3, 5))-1, dateString.substring(0, 2));
+            if (currDate.getTime()>=stDate.getTime() &&currDate.getTime()<=edDate.getTime()){
+                newArr.push(dataSource[key]);
+            }
+        }
+        console.log('Here you go');
+        console.log(newArr);
+        $('#day-charts').empty();
+
+        createCharts(newArr);
+
+
+        //alert("A new date range was chosen: " + start.format('DD-MM-YYYY') + ' to ' + end.format('DD-MM-YYYY'));
     });
 
     //haven't decided if I'm gonna hide it or not
