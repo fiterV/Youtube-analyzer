@@ -11,6 +11,14 @@
     <script src="https://cdn3.devexpress.com/jslib/16.2.5/js/dx.all.js"></script>
     <script src="{% static "visualizer/charts.js" %}"></script>
     <link href="https://fonts.googleapis.com/css?family=Jim+Nightshade" rel="stylesheet">
+    <!-- Daterange picker -->
+    <script type="text/javascript" src="//cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/bootstrap/3/css/bootstrap.css" />
+
+    <!-- Include Date Range Picker -->
+    <script type="text/javascript" src="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.js"></script>
+    <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.css" />
+
 <style>
     .tab-content > .tab-pane:not(.active),
     .pill-content > .pill-pane:not(.active) {
@@ -21,6 +29,11 @@
     .date{
         font-family: 'Jim Nightshade', cursive;
         font-weight:bold;
+    }
+    .datepicker{
+        width:50px;
+        height:50px;
+
     }
 
 </style>
@@ -72,6 +85,13 @@
     </div>
     <div class="tab-pane fade active in" role="tabpanel" id="statistics" aria-labelledby="statistics-tab">
         <div class="row">
+            <div class="col-lg-offset-11">
+                <!--<div class="btn btn-default datepicker">123</div>-->
+                <img src="{% static "visualizer/images/calendar-icon-32.png" %}" class="img img-responsive datepicker">
+
+            </div>
+        </div>
+        <div class="row">
             <div class="col-lg-6">
                 <div id="chart"></div>
             </div>
@@ -89,7 +109,9 @@
     </div>
 </div>
 
+
 <script>
+   $(document).ready(function() {
     var dataSource = [];
         {% for video in videos %}
                 dataSource.push({
@@ -99,6 +121,24 @@
                 });
         {% endfor %}
     createCharts(dataSource);
+
+    $('.datepicker').daterangepicker(
+    {
+        locale: {
+          format: 'DD-MM-YYYY'
+        },
+        opens:"left",
+    },
+    function(start, end, label) {
+        alert("A new date range was chosen: " + start.format('DD-MM-YYYY') + ' to ' + end.format('DD-MM-YYYY'));
+    });
+
+    //haven't decided if I'm gonna hide it or not
+    //$(".calendar.right").css('display', 'none');
+
+});
+
+
 </script>
 
 
