@@ -49,12 +49,16 @@
 
       <a href="#history" aria-controls="history" role="tab" data-toggle="tab">All videos history</a>
   </li>
-  <li role="presentation" class="active">
+  <li role="presentation" class="">
       <a href="#statistics" aria-controls="statistics" role="tab" data-toggle="tab">Statistics per channel</a>
  </li>
 
   <li role="presentation" class="">
       <a href="#statisticsDay" aria-controls="statisticsDay" role="tab" data-toggle="tab">Statistics per day</a>
+  </li>
+
+  <li role="presentation" class="active">
+      <a href="#vidsOverTime" aria-controls="vidsOverTime" role="tab" data-toggle="tab">Vids watched over time</a>
   </li>
 </ul>
 
@@ -87,7 +91,7 @@
             </table>
         </div>
     </div>
-    <div class="tab-pane fade active in" role="tabpanel" id="statistics" aria-labelledby="statistics-tab">
+    <div class="tab-pane fade" role="tabpanel" id="statistics" aria-labelledby="statistics-tab">
         <div class="row">
             <div class="col-lg-offset-11">
                 <!--<div class="btn btn-default datepicker">123</div>-->
@@ -113,6 +117,11 @@
 
         </div>
     </div>
+    <div class="tab-pane fade active in" role="tabpanel" id="vidsOverTime" aria-labelledby="vidsOverTime-tab">
+        <div class="container" id="vids-over-time">
+
+        </div>
+    </div>
 </div>
 
 
@@ -126,42 +135,38 @@
                     "counter":1,
                 });
         {% endfor %}
-    createCharts(dataSource);
-    console.log(dataSource);
+    createChartsPerChannel(dataSource);
+    createChartsPerDay(dataSource);
+    createChartsForVidsOverTime(dataSource);
     $('.datepicker').daterangepicker(
-    {
-        locale: {
-          format: 'DD-MM-YYYY'
-        },
-        ranges: {
-           'Today': [moment(), moment()],
-           'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-           'Last 7 Days': [moment().subtract(6, 'days'), moment()],
-           'Last 30 Days': [moment().subtract(29, 'days'), moment()],
-           'This Month': [moment().startOf('month'), moment().endOf('month')],
-           'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
-        },
-        opens:"left",
-    },
-    function(start, end, label) {
-        var stDate = new Date(start);
-        var edDate = new Date(end);
-        newArr = [];
-        for (key in dataSource){
-            var dateString = dataSource[key]["date"];
-            var currDate = new Date(dateString.substring(6), parseInt(dateString.substring(3, 5))-1, dateString.substring(0, 2));
-            if (currDate.getTime()>=stDate.getTime() &&currDate.getTime()<=edDate.getTime()){
-                newArr.push(dataSource[key]);
-            }
-        }
-        console.log('Here you go');
-        console.log(newArr);
-        $('#day-charts').empty();
+            {
+                locale: {
+                  format: 'DD-MM-YYYY'
+                },
+                ranges: {
+                   'Today': [moment(), moment()],
+                   'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+                   'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+                   'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+                   'This Month': [moment().startOf('month'), moment().endOf('month')],
+                   'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+                },
+                opens:"left",
+            },
+            function(start, end, label) {
+                var stDate = new Date(start);
+                var edDate = new Date(end);
+                newArr = [];
+                for (key in dataSource){
+                    var dateString = dataSource[key]["date"];
+                    var currDate = new Date(dateString.substring(6), parseInt(dateString.substring(3, 5))-1, dateString.substring(0, 2));
+                    if (currDate.getTime()>=stDate.getTime() &&currDate.getTime()<=edDate.getTime()){
+                        newArr.push(dataSource[key]);
+                    }
+                }
+                $('#day-charts').empty();
 
-        createCharts(newArr);
-
-
-        //alert("A new date range was chosen: " + start.format('DD-MM-YYYY') + ' to ' + end.format('DD-MM-YYYY'));
+                createCharts(newArr);
     });
 
     //haven't decided if I'm gonna hide it or not

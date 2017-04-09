@@ -16,10 +16,9 @@ function getStatisticsPerChannel(dataSource){
             return transformedData;
         }
 
-function createCharts(dataSource){
-        transformedData = getStatisticsPerChannel(dataSource);
-
-        $('#chart').dxPieChart({
+function createChartsPerChannel(dataSource){
+    transformedData = getStatisticsPerChannel(dataSource);
+    $('#chart').dxPieChart({
             palette: "bright",
             dataSource:transformedData,
             series:{
@@ -68,6 +67,10 @@ function createCharts(dataSource){
                 visible: false
             },
          });
+}
+
+function createChartsPerDay(dataSource){
+        transformedData = getStatisticsPerChannel(dataSource);
 
         //let's collect videos by date into one dictionary
         vidCollGroupByDate = [];
@@ -83,14 +86,14 @@ function createCharts(dataSource){
            number+=2;
            $('#day-charts').append(`<div class="row">
                                         <h3 class="date">${key}</h3>
-                                        
+
                                         <div class="col-lg-6">
                                             <div id="chart-${number}"></div>
                                         </div>
-                                        
+
                                         <div class="col-lg-6">
                                             <div id="chart-${number+1}"></div>
-    
+
                                         </div>
                                     </div>`);
            $(`#chart-${number}`).dxPieChart({
@@ -144,3 +147,64 @@ function createCharts(dataSource){
          });
         }
 };
+
+function createChartsForVidsOverTime(dataSource){
+
+    $('#vids-over-time').append(`<div id="chartVid"></div>`);
+    newArr = {};
+    for (key in dataSource){
+        var date = dataSource[key]["date"];
+        newArr[date]=(newArr[date]||0)+1;
+    }
+    //console.log(newArr);
+    var transformedData = [];
+    for (key in newArr){
+        transformedData.push({
+                "date":key,
+                "counter":newArr[key],
+            });
+    }
+
+    var types = ["spline", "line"];
+
+     var chart=$("#chartVid").dxChart({
+        palette: ['#e50003'],
+        dataSource: transformedData,
+        commonSeriesSettings: {
+            type: types[0],
+            argumentField: "date"
+        },
+        commonAxisSettings: {
+            grid: {
+                visible: true
+            }
+        },
+        margin: {
+            bottom: 20
+        },
+        series: [
+            { valueField: "counter", name: "Video count" },
+        ],
+        //display only integers y-axis
+        valueAxis: {
+            min: 0,
+            tickInterval: 0.1,
+        },
+        tooltip:{
+            enabled: true
+        },
+        "export": {
+            enabled: true,
+             fileName:`amountOfVids-${transformedData[0]["date"]}-${transformedData[transformedData.length-1]["date"]}`,
+             formats:["PDF", "PNG", "JPEG"]
+        },
+        legend: {
+            verticalAlignment: "top",
+            horizontalAlignment: "right"
+        },
+
+        title: "Amount Of Vids Watched Over Time",
+
+    }).dxChart("instance");
+
+}
