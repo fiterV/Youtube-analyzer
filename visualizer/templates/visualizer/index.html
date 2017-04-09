@@ -10,6 +10,7 @@
     <script src="{% static "visualizer/globalize.min.js" %}"></script>
     <script src="https://cdn3.devexpress.com/jslib/16.2.5/js/dx.all.js"></script>
     <script src="{% static "visualizer/charts.js" %}"></script>
+    <script src="{% static "visualizer/dateRangePicker.js" %}"></script>
     <link href="https://fonts.googleapis.com/css?family=Jim+Nightshade" rel="stylesheet">
     <!-- Daterange picker -->
     <script type="text/javascript" src="//cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
@@ -127,50 +128,11 @@
 
 <script>
    $(document).ready(function() {
-    var dataSource = [];
-        {% for video in videos %}
-                dataSource.push({
-                    "channel":'{{ video.channel }}',
-                    "date":'{{ video.date|date:'d-m-Y' }}',
-                    "counter":1,
-                });
-        {% endfor %}
+    var dataSource={{ videosList|safe }}
     createChartsPerChannel(dataSource);
     createChartsPerDay(dataSource);
     createChartsForVidsOverTime(dataSource);
-    $('.datepicker').daterangepicker(
-            {
-                locale: {
-                  format: 'DD-MM-YYYY'
-                },
-                ranges: {
-                   'Today': [moment(), moment()],
-                   'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-                   'Last 7 Days': [moment().subtract(6, 'days'), moment()],
-                   'Last 30 Days': [moment().subtract(29, 'days'), moment()],
-                   'This Month': [moment().startOf('month'), moment().endOf('month')],
-                   'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
-                },
-                opens:"left",
-            },
-            function(start, end, label) {
-                var stDate = new Date(start);
-                var edDate = new Date(end);
-                newArr = [];
-                for (key in dataSource){
-                    var dateString = dataSource[key]["date"];
-                    var currDate = new Date(dateString.substring(6), parseInt(dateString.substring(3, 5))-1, dateString.substring(0, 2));
-                    if (currDate.getTime()>=stDate.getTime() &&currDate.getTime()<=edDate.getTime()){
-                        newArr.push(dataSource[key]);
-                    }
-                }
-                $('#day-charts').empty();
-
-                createCharts(newArr);
-    });
-
-    //haven't decided if I'm gonna hide it or not
-    //$(".calendar.right").css('display', 'none');
+    addDatePicker('.datepicker', dataSource);
 
 });
 

@@ -18,4 +18,4 @@ class AddVideo(View):
         return HttpResponse("Added")
 
     def get(self, request, *args, **kwargs):
-        return HttpResponse("Welcome home")
+        return HttpResponse("Welcome, but just with API key")
