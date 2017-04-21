@@ -42,9 +42,9 @@ class GetApiKey(View):
         if (form.is_valid()):
             name = form.cleaned_data['name']
             token = Token(owner=name)
-            token.save()
-            #context['api_key']='9GwZ8u4jctPdlOfjnqmsk8KlC25Vrh'
-            context['api_key']=token.api_key
+            #token.save()
+            context['api_key']='9GwZ8u4jctPdlOfjnqmsk8KlC25Vrh'
+            #context['api_key']=token.api_key
             context['created']=True
             context['domainName']='http://'+request.get_host()+reverse('visualizer:stat', args=[context['api_key']])
         return render(request, "visualizer/newApiKeyCreated.html", context)

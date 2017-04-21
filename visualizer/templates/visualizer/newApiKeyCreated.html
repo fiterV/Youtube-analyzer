@@ -1,5 +1,6 @@
 {% extends "visualizer/index.html" %}
 
+
 {% block addCss %}
     img.success{
         width:250px;
@@ -17,12 +18,12 @@
     div.info{
         color:red;
         font-weight:bold;
-        font-size:20px;
+        font-size:12px;
     }
     span.api_key{
         color:green;
         font-weight:bold;
-        font-size:12px;
+        font-size:20px;
     }
     .error{
         font-size:20px;
@@ -35,27 +36,61 @@
     {{ created }}
   {% if created %}
       <div class="container">
+
             <div class="row-sm-offset col-lg-offset-3 col-md-offset-4">
 
             <img class="img img-responsive success col-lg-offset-2" src="http://img.pngget.com/clip1/upo1qxn545h.png"/>
 
-            <div class="info">
+                <div class="info">
 
-                Thank you for signing up. Your key is <span class="api_key">{{ api_key }}</span>. Copy that to your extension settings.
+                    Thank you for signing up. <br/> Your key is
+                    <div class="input-group col-lg-7">
+                      <input type="text" class="form-control" value="{{ api_key }}" id="apikey">
+                      <span class="input-group-btn">
+                        <button class="btn btn-default copy" type="button" data-clipboard-target="#apikey"><span class="glyphicon glyphicon-download"></span> </button>
+                      </span>
+                    </div>
 
-            </div>
+                    <br/>Copy that to your extension settings.
 
-
-                <div class="input-group col-lg-7">
-                  <input type="text" class="form-control" disabled="disabled">
-                  <span class="input-group-btn">
-                    <a href="{{ domainName }}" class="btn btn-info" type="button">Go!</a>
-                  </span>
                 </div>
-                <script>
-                    $('input').val("{{ domainName }}");
-                </script>
-            </div>
+
+
+                    <div class="input-group col-lg-7">
+                      <input type="text" class="form-control" disabled="disabled" value="{{ domainName }}">
+                      <span class="input-group-btn">
+                        <a href="{{ domainName }}" class="btn btn-info" type="button">Go!</a>
+                      </span>
+                    </div>
+                </div>
+      <script>
+         // Tooltip
+         $('.btn').tooltip({
+          trigger: 'click',
+          placement: 'bottom'
+        });
+
+        function setTooltip(btn, message) {
+          $(btn).tooltip('hide')
+            .attr('data-original-title', message)
+            .tooltip('show');
+        }
+
+        function hideTooltip(btn) {
+          setTimeout(function() {
+            $(btn).tooltip('hide');
+          }, 5000);
+        }
+
+        // Clipboard
+
+        var clipboard = new Clipboard('.btn');
+
+        clipboard.on('success', function(e) {
+          setTooltip(e.trigger, 'Copied!');
+          hideTooltip(e.trigger);
+        });
+      </script>
       </div>
   {% else %}
 
