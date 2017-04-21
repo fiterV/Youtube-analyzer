@@ -23,4 +23,11 @@ class Statistics(View):
             'videosList':json.dumps(videosList),
 
         }
+        return render(request, "visualizer/showStats.html", context)
+
+class GetApiKey(View):
+    def get(self, request):
+        context={
+
+        }
         return render(request, "visualizer/index.html", context)

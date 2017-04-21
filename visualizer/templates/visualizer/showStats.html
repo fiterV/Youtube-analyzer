@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Youtube statistics</title>
+    {% load staticfiles %}
+    <script src="{% static "visualizer/jquery.min.js" %}"></script>
+    <link rel="stylesheet" type="text/css" href="{% static "visualizer/css/bootstrap.min.css" %}">
+    <script src="{% static "visualizer/js/bootstrap.js" %}"></script>
+    <script src="{% static "visualizer/globalize.min.js" %}"></script>
+    <script src="https://cdn3.devexpress.com/jslib/16.2.5/js/dx.all.js"></script>
+    <script src="{% static "visualizer/charts.js" %}"></script>
+    <script src="{% static "visualizer/dateRangePicker.js" %}"></script>
+    <link href="https://fonts.googleapis.com/css?family=Jim+Nightshade" rel="stylesheet">
+    <!-- Daterange picker -->
+    <script type="text/javascript" src="//cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/bootstrap/3/css/bootstrap.css" />
+
+    <!-- Include Date Range Picker -->
+    <script type="text/javascript" src="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.js"></script>
+    <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.css" />
+
+<style>
+    .tab-content > .tab-pane:not(.active),
+    .pill-content > .pill-pane:not(.active) {
+        display: block;
+        height: 0;
+        overflow-y: hidden;
+    }
+    .date{
+        font-family: 'Jim Nightshade', cursive;
+        font-weight:bold;
+    }
+    .datepicker{
+        width:50px;
+        height:50px;
+
+    }
+    .datepicker:hover{
+        border-radius:10px;
+        box-shadow: 0 0 6px rgba(35, 173, 255, 1);
+    }
+
+</style>
+</head>
+<body>
+
+<ul class="nav nav-tabs">
+  <li role="presentation">
+
+      <a href="#history" aria-controls="history" role="tab" data-toggle="tab">All videos history</a>
+  </li>
+  <li role="presentation" class="">
+      <a href="#statistics" aria-controls="statistics" role="tab" data-toggle="tab">Statistics per channel</a>
+ </li>
+
+  <li role="presentation" class="">
+      <a href="#statisticsDay" aria-controls="statisticsDay" role="tab" data-toggle="tab">Statistics per day</a>
+  </li>
+
+  <li role="presentation" class="active">
+      <a href="#vidsOverTime" aria-controls="vidsOverTime" role="tab" data-toggle="tab">Vids watched over time</a>
+  </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade" id="history" role="tabpanel" aria-labelledby="history-tab">
+        <div class="container">
+            <h3>{{ owner }}'s statistics</h3>
+
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Title</th>
+                        <th>Channel</th>
+                        <th>Date</th>
+                        <th>Video</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for video in videos %}
+                        <tr>
+                            <th>{{ forloop.counter }}</th>
+                            <th>{{ video.title }}</th>
+                            <th>{{ video.channel }}</th>
+                            <th>{{ video.date }}</th>
+                            <th><a href="{{ video.url }}">{{ video.url }}</a></th>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="tab-pane fade" role="tabpanel" id="statistics" aria-labelledby="statistics-tab">
+        <div class="row">
+            <div class="col-lg-offset-11">
+                <!--<div class="btn btn-default datepicker">123</div>-->
+
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-6">
+                <div id="chart"></div>
+            </div>
+            <div class="col-lg-6">
+                <div id="chart2"></div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="tab-pane fade" role="tabpanel" id="statisticsDay" aria-labelledby="statisticsDay-tab">
+        <div class="col-lg-offset-11">
+            <img src="{% static "visualizer/images/calendar-icon-32.png" %}" class="img img-responsive datepicker">
+        </div>
+        <div class="container" id="day-charts">
+
+        </div>
+    </div>
+    <div class="tab-pane fade active in" role="tabpanel" id="vidsOverTime" aria-labelledby="vidsOverTime-tab">
+        <div class="container" id="vids-over-time">
+
+        </div>
+    </div>
+</div>
+
+
+<script>
+   $(document).ready(function() {
+    var dataSource={{ videosList|safe }}
+    createChartsPerChannel(dataSource);
+    createChartsPerDay(dataSource);
+    createChartsForVidsOverTime(dataSource);
+    addDatePicker('.datepicker', dataSource);
+
+});
+
+
+</script>
+
+
+</body>
+</html>
