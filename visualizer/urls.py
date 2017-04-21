@@ -17,6 +17,7 @@ from django.conf.urls import url, include
 from django.contrib import admin
 from visualizer.views import Statistics, GetApiKey
 
+app_name='visualizer'
 urlpatterns = [
     url(r'^show/(?P<code>\w{30})$', Statistics.as_view(), name='stat'),
     url(r'^$', GetApiKey.as_view(), name='index'),

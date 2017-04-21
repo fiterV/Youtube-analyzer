@@ -1,0 +1,77 @@
+{% extends "visualizer/index.html" %}
+
+{% block addCss %}
+    img.success{
+        width:250px;
+        height:250px;
+
+    }
+    img.failed{
+        width:250px;
+        height:250px;
+
+    }
+    .row-sm-offset{
+        margin-top: 10em;
+    }
+    div.info{
+        color:red;
+        font-weight:bold;
+        font-size:20px;
+    }
+    span.api_key{
+        color:green;
+        font-weight:bold;
+        font-size:12px;
+    }
+    .error{
+        font-size:20px;
+        font-family: Helvetica, Arial, Serif;
+        font-weight:bold;
+    }
+{% endblock %}
+
+{% block body %}
+    {{ created }}
+  {% if created %}
+      <div class="container">
+            <div class="row-sm-offset col-lg-offset-3 col-md-offset-4">
+
+            <img class="img img-responsive success col-lg-offset-2" src="http://img.pngget.com/clip1/upo1qxn545h.png"/>
+
+            <div class="info">
+
+                Thank you for signing up. Your key is <span class="api_key">{{ api_key }}</span>. Copy that to your extension settings.
+
+            </div>
+
+
+                <div class="input-group col-lg-7">
+                  <input type="text" class="form-control" disabled="disabled">
+                  <span class="input-group-btn">
+                    <a href="{{ domainName }}" class="btn btn-info" type="button">Go!</a>
+                  </span>
+                </div>
+                <script>
+                    $('input').val("{{ domainName }}");
+                </script>
+            </div>
+      </div>
+  {% else %}
+
+      <div class="container">
+            <div class="row-sm-offset col-lg-offset-3 col-md-offset-4">
+
+                <img class="img img-responsive failed col-lg-offset-2" src="http://stockpictures.io/wp-content/uploads/2016/06/50254-error-button-failure-warning-problem-stop-alert-caution-safety-round-wrong-red-incorrect-free-vector-graphics-free-illustrations-free-images-royalty-free.png"/>
+
+                <div class="error">
+                    Please, provide valid name.
+                </div>
+
+            </div>
+      </div>
+
+
+
+  {% endif %}
+{% endblock %}

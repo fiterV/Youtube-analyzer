@@ -15,17 +15,37 @@
     .dialog{
         margin-top:20%;
     }
+    {% block addCss %}
+
+    {% endblock %}
 </style>
 </head>
 <body>
 
+{% block body %}
 <div class="container">
-    <div class="col-lg-offset-5 col-md-offset-6 dialog">
+    <div class="col-lg-offset-4 col-md-offset-6 dialog">
 
-        <button class="btn btn-success">Sign up</button>
+        <form class="input-group col-lg-4" method="post" action=".">
+
+                  {{ form }}
+                  <span class="input-group-btn">
+                    <button class="btn btn-success" type="submit">Sign up!</button>
+                  </span>
+        </form>
+
+        <script>
+            //$document.ready(function(){
+                $('input').addClass('form-control');
+                $('input').attr('placeholder', 'Your name');
+
+            //});
+        </script>
+
 
     </div>
 </div>
+{% endblock %}
 
 </body>
 </html>

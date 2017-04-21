@@ -1,4 +1,4 @@
-from django.shortcuts import render, get_object_or_404, HttpResponse
+from django.shortcuts import render, get_object_or_404, HttpResponse, reverse
 from django.views.generic import View
 from analyzer.models import Token, Video
 import json
@@ -25,9 +25,26 @@ class Statistics(View):
         }
         return render(request, "visualizer/showStats.html", context)
 
+from visualizer.forms import SignUpForm
+
 class GetApiKey(View):
     def get(self, request):
-        context={
 
+        context={
+            'form':SignUpForm(),
         }
         return render(request, "visualizer/index.html", context)
+    def post(self, request):
+        form = SignUpForm(request.POST)
+        context={
+            'created':False,
+        }
+        if (form.is_valid()):
+            name = form.cleaned_data['name']
+            token = Token(owner=name)
+            token.save()
+            #context['api_key']='9GwZ8u4jctPdlOfjnqmsk8KlC25Vrh'
+            context['api_key']=token.api_key
+            context['created']=True
+            context['domainName']='http://'+request.get_host()+reverse('visualizer:stat', args=[context['api_key']])
+        return render(request, "visualizer/newApiKeyCreated.html", context)
