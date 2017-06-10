@@ -46,7 +46,7 @@
 <body>
 
 <ul class="nav nav-tabs">
-  <li role="presentation">
+  <li role="presentation" class="active">
 
       <a href="#history" aria-controls="history" role="tab" data-toggle="tab">All videos history</a>
   </li>
@@ -58,13 +58,13 @@
       <a href="#statisticsDay" aria-controls="statisticsDay" role="tab" data-toggle="tab">Statistics per day</a>
   </li>
 
-  <li role="presentation" class="active">
+  <li role="presentation" class="">
       <a href="#vidsOverTime" aria-controls="vidsOverTime" role="tab" data-toggle="tab">Vids watched over time</a>
   </li>
 </ul>
 
 <div class="tab-content">
-    <div class="tab-pane fade" id="history" role="tabpanel" aria-labelledby="history-tab">
+    <div class="tab-pane fade active in" id="history" role="tabpanel" aria-labelledby="history-tab">
         <div class="container">
             <h3>{{ owner }}'s statistics</h3>
 
@@ -118,7 +118,7 @@
 
         </div>
     </div>
-    <div class="tab-pane fade active in" role="tabpanel" id="vidsOverTime" aria-labelledby="vidsOverTime-tab">
+    <div class="tab-pane fade" role="tabpanel" id="vidsOverTime" aria-labelledby="vidsOverTime-tab">
         <div class="container" id="vids-over-time">
 
         </div>

@@ -37,14 +37,17 @@ class GetApiKey(View):
     def post(self, request):
         form = SignUpForm(request.POST)
         context={
-            'created':False,
         }
         if (form.is_valid()):
             name = form.cleaned_data['name']
             token = Token(owner=name)
-            #token.save()
-            context['api_key']='9GwZ8u4jctPdlOfjnqmsk8KlC25Vrh'
-            #context['api_key']=token.api_key
-            context['created']=True
+            token.save()
+            #context['api_key']='9GwZ8u4jctPdlOfjnqmsk8KlC25Vrh'
+            context['api_key']=token.api_key
             context['domainName']='http://'+request.get_host()+reverse('visualizer:stat', args=[context['api_key']])
-        return render(request, "visualizer/newApiKeyCreated.html", context)
+            return render(request, "visualizer/newApiKeyCreated.html", context)
+        else:
+            print(form.errors)
+            context['errors']=form.errors
+            context['form']=form
+            return render(request, "visualizer/index.html", context)

@@ -6,46 +6,68 @@
     {% load staticfiles %}
     <script src="{% static "visualizer/jquery.min.js" %}"></script>
     <link rel="stylesheet" type="text/css" href="{% static "visualizer/css/bootstrap.min.css" %}">
-    <script src="{% static "visualizer/js/bootstrap.js" %}"></script>
+    <script src="{% static "visualizer/js/bootstrap.min.js" %}"></script>
     <script src="{% static "visualizer/dateRangePicker.js" %}"></script>
     <script src="{% static "visualizer/clipboard.min.js" %}"></script>
+
+    <!-- Just some nice fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Merriweather" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Indie+Flower|Merriweather" rel="stylesheet">
+
+
 <style>
     body{
-       // background-image: url({% static "visualizer/images/mountains.jpg" %});
+        background-image: url({% static "visualizer/images/mountains.jpg" %});
     }
     .dialog{
         margin-top:20%;
+    }
+    .errors{        
+        color:red;
+        font-weight:bold;
+        font-family: 'Indie Flower', cursive;
+        font-size:20px;
+    }
+    .glyphicon{
+        font-size:100px;
     }
     {% block addCss %}
 
     {% endblock %}
 </style>
+
 </head>
 <body>
 
 {% block body %}
-<div class="container">
-    <div class="col-lg-offset-4 col-md-offset-6 dialog">
+    <a href="{% static "visualizer/YA.crx" %}" download>
 
-        <form class="input-group col-lg-4" method="post" action=".">
+        <span class="glyphicon glyphicon-download"></span>
 
-                  {{ form }}
+    </a>
+    <div class="container">
+        <div class="col-lg-offset-4 col-md-offset-3 col-xs-offset-4 dialog">
+            {% if form.errors %}
+                <div class="errors">
+                    {{ form.name.errors.as_text }}
+                </div>
+            {% endif %}
+            <form class="input-group col-lg-4 col-md-4 col-xs-10" method="post" action=".">
+                  {% csrf_token %}
+                  
+                  {{ form.name }}
+                  
                   <span class="input-group-btn">
                     <button class="btn btn-success" type="submit">Sign up!</button>
                   </span>
-        </form>
+            </form>
 
-        <script>
-            //$document.ready(function(){
-                $('input').addClass('form-control');
-                $('input').attr('placeholder', 'Your name');
-
-            //});
-        </script>
-
-
+            <script>
+                    $('input').addClass('form-control');
+                    $('input').attr('placeholder', 'Your name');
+            </script>
+        </div>
     </div>
-</div>
 {% endblock %}
 
 </body>
