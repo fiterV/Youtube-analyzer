@@ -14,7 +14,7 @@ Chrome-extension that'll help you track your time that you spend on Youtube, and
 4) Watch videos and enjoy.
 
 ## How to view statistics
-Click at extension, and then - at Statistics button in popup.
+Click at extension icon, and then - at **Statistics** button in popup.
 
 
 ## Screenshots
