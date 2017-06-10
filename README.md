@@ -4,7 +4,7 @@
 ## Overview
 Chrome-extension that'll help you track your time that you spend on Youtube, and content that you watch there.
 
-##How to install
+## How to install
 1) Download **YA.crx** at our website and drag it to extensions page in Chrome.
 2) Register at https://tranquil-tundra-67102.herokuapp.com/ , copy the key:
 ![Copy key](images/5.png)
