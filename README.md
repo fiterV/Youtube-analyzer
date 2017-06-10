@@ -1,14 +1,23 @@
-<p> This is project for help you track your time that you spend on Youtube, and content that you watch there </p>
+# Youtube analyzer
+<img src="images/youtube.png" width="10%"/>
 
-<p><b> How to install: </b> </p>
+## Overview
+Chrome-extension that'll help you track your time that you spend on Youtube, and content that you watch there.
 
-<ol type="1">
-	<li>Install TamperMonkey for your browser</li>
-	<li>Get server address, and api_key</li>
-	<li>Import script in it</li>
-</ol>
+##How to install
+1) Download **YA.crx** at our website and drag it to extensions page in Chrome.
+2) Register there and paste the key in extension settings.
+![a](images/2.png)
+3) Watch videos and enjoy.
 
-All the files that you see here are collected for Heroku deployment...
+## How to view statistics
+Click at extension, and then - at Statistics button in popup.
 
 
+## Screenshots
+![a](images/1.png)
+
+![a](images/4.png)
+
+![a](images/3.png)
 
